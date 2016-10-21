@@ -2,17 +2,13 @@ package com.example.administrator.jsbridge;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,10 +54,8 @@ public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
     }
 
     /**
-     *
-     * @param handler
-     *            default handler,handle messages send by js without assigned handler name,
-     *            if js message has handler name, it will be handled by named handlers registered by native
+     * @param handler default handler,handle messages send by js without assigned handler name,
+     *                if js message has handler name, it will be handled by named handlers registered by native
      */
     public void setDefaultHandler(BridgeHandler handler) {
         this.defaultHandler = handler;
@@ -85,11 +79,11 @@ public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
         String functionName = BridgeUtil.getFunctionFromReturnUrl(url);
         CallBackFunction f = responseCallbacks.get(functionName);
         String data = BridgeUtil.getDataFromReturnUrl(url);
-        if (f != null) {
-            f.onCallBack(data);
-            responseCallbacks.remove(functionName);
-            return;
-        }
+
+        f.onCallBack(data);
+        responseCallbacks.remove(functionName);
+        return;
+
     }
 
     @Override
@@ -128,10 +122,8 @@ public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
 
     void dispatchMessage(Message m) {
         String messageJson = m.toJson();
-        //escape special characters for json string
-        messageJson = messageJson.replaceAll("(\\\\)([^utrn])", "\\\\\\\\$1$2");
-        messageJson = messageJson.replaceAll("(?<=[^\\\\])(\")", "\\\\\"");
-        String javascriptCommand = String.format(BridgeUtil.JS_HANDLE_MESSAGE_FROM_JAVA, messageJson);
+        String javascriptCommand = String.format("javascript:WebViewJavascriptBridge._handleMessageFromNative('%s',", messageJson) + m.getData() + ");";
+        android.util.Log.i("MSG", javascriptCommand);
         if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
             this.loadUrl(javascriptCommand);
         }
@@ -191,7 +183,7 @@ public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
                             } else {
                                 handler = defaultHandler;
                             }
-                            if (handler != null){
+                            if (handler != null) {
                                 handler.handler(m.getData(), responseFunction);
                             }
                         }

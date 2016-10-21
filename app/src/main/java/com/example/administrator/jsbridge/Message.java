@@ -57,7 +57,7 @@ public class Message {
         JSONObject jsonObject= new JSONObject();
         try {
             jsonObject.put(CALLBACK_ID_STR, getCallbackId());
-            jsonObject.put(DATA_STR, getData());
+           // jsonObject.put(DATA_STR, getData());
             jsonObject.put(HANDLER_NAME_STR, getHandlerName());
             jsonObject.put(RESPONSE_DATA_STR, getResponseData());
             jsonObject.put(RESPONSE_ID_STR, getResponseId());

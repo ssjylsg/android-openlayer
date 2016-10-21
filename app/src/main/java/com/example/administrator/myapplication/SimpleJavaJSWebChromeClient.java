@@ -16,7 +16,6 @@ public class SimpleJavaJSWebChromeClient extends WebChromeClient {
     public SimpleJavaJSWebChromeClient(NetPosaMap map) {
         this.map = map;
     }
-
     @Override
     public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
@@ -32,7 +31,6 @@ public class SimpleJavaJSWebChromeClient extends WebChromeClient {
         return true;
         // return super.onJsAlert(view, url, message, result);
     }
-
     @Override
     public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, JsPromptResult result) {
         Util.Info("onJsPrompt", message);
@@ -41,8 +39,7 @@ public class SimpleJavaJSWebChromeClient extends WebChromeClient {
             result.cancel();
             return true;
         }
-
-
         return super.onJsPrompt(view, url, message, defaultValue, result);
     }
+
 }

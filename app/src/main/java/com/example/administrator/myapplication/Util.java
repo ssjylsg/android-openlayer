@@ -47,6 +47,9 @@ public class Util {
 
 
     public static void Info(String tag, String msg) {
-        android.util.Log.i(tag, msg);
+        if(msg != null){
+            android.util.Log.i(tag, msg);
+        }
+
     }
 }

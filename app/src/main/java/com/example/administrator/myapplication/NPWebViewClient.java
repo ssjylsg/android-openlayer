@@ -5,17 +5,20 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.example.administrator.jsbridge.BridgeWebView;
+import com.example.administrator.jsbridge.BridgeWebViewClient;
 
 
 /**
  * Created by Administrator on 2016/10/18.
  */
 
-public class NPWebViewClient extends WebViewClient {
+public class NPWebViewClient extends BridgeWebViewClient {
 
     private NetPosaMap map;
 
-    public NPWebViewClient(NetPosaMap map) {
+    public NPWebViewClient(BridgeWebView view, NetPosaMap map) {
+        super(view);
         this.map = map;
     }
 

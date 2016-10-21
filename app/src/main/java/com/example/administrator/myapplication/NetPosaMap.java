@@ -1,9 +1,13 @@
 package com.example.administrator.myapplication;
 
+import android.util.Log;
 import android.webkit.WebSettings;
-import android.webkit.WebView;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.example.administrator.jsbridge.BridgeHandler;
+import com.example.administrator.jsbridge.BridgeWebView;
+import com.example.administrator.jsbridge.CallBackFunction;
+import com.example.administrator.jsbridge.DefaultHandler;
 import com.example.administrator.myapplication.Events.EventManager;
 import com.example.administrator.myapplication.Layers.Layer;
 
@@ -18,7 +22,7 @@ import java.util.concurrent.Semaphore;
 public class NetPosaMap extends Entity {
     private static final String NetPosaMap_TAG = "NetPosaMap";
     @JSONField(serialize = false)
-    private WebView webView;
+    private BridgeWebView webView;
     /**
      * 互调对象
      */
@@ -32,21 +36,33 @@ public class NetPosaMap extends Entity {
     private Boolean isMapavaild = false;
     private EventManager manager;
 
-    public NetPosaMap(WebView webView) {
+    public NetPosaMap(BridgeWebView webView) {
         this.setClassName("NPMobile.Map");
         this.jsObject = new JsObject(this);
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
+
+
+        webView.setDefaultHandler(new DefaultHandler());
+        webView.setWebViewClient(new NPWebViewClient(webView, this));
         webView.setWebChromeClient(new SimpleJavaJSWebChromeClient(this));
-        webView.setWebViewClient(new NPWebViewClient(this));
-        webView.addJavascriptInterface(jsObject, "Android");
+
         this.webView = webView;
         this.loadUrl("http://192.168.61.28:807/mobile/dist/index_c.html");
         manager = new EventManager();
 
+        webView.registerHandler("NPMobileHelper.Event.Call", new BridgeHandler() {
+            @Override
+            public void handler(String data, CallBackFunction function) {
+                Util.Info("JSCALLBACK",data);
+            }
+        });
     }
 
     public void CreateMap() {
+        if (isMapavaild) {
+            return;
+        }
         String msg = this.getJavascript(this, "donothing");
         android.util.Log.i(NetPosaMap_TAG, msg);
         this.webView.loadUrl(msg);
@@ -82,23 +98,23 @@ public class NetPosaMap extends Entity {
                 }
             }
         }
-        String msg = "javascript:NPMobileHelper.callMethod(" + Util.join(list.toArray(), ",") + ")";
+        String msg = Util.join(list.toArray(), ",");
         return msg;
     }
 
     public Object ExecuteJavaScripts(String code) {
-//        try {
-//            semp.acquire();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-        webView.loadUrl(code);
+        webView.callHandler("NPMobileHelper.callMethod", code, new CallBackFunction() {
+            @Override
+            public void onCallBack(String data) {
+             Util.Info("onCallBack", data);
+            }
+        });
         return outMsg;
     }
 
     public <T extends Entity> Object ExecuteJs(T obj, String method, Object... args) {
         String msg = this.getJavascript(obj, method, args);
-        android.util.Log.i(NetPosaMap_TAG, msg);
+        isMapavaild = true;
         if (!this.isMapavaild) {
             this.manager.push(this, "ExecuteJavaScripts", msg);
             return null;
@@ -106,19 +122,18 @@ public class NetPosaMap extends Entity {
         } else {
             return ExecuteJavaScripts(msg);
         }
-
     }
 
     /**
      * @param {number} zoom
      */
     public void SetZoom(int zoom) {
-
+        this.ExecuteJs("setZoom", zoom);
     }
 
     @JSONField(serialize = false)
-    public int getZoom() {
-        return Integer.parseInt(this.ExecuteJs("getZoom").toString());
+    public void getZoom(NPCallBackFunction<Point> callBackFunction) {
+        this.ExecuteJs("getZoom");
     }
 
 
@@ -158,8 +173,6 @@ public class NetPosaMap extends Entity {
 
     public Boolean parseJsonFromJs(String msg) {
         outMsg = msg;
-        android.util.Log.i("LSG", outMsg);
-//        semp.release();
         return true;
     }
 
