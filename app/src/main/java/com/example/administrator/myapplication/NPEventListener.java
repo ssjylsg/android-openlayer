@@ -1,12 +1,12 @@
 package com.example.administrator.myapplication;
 
 
-import java.util.EventObject;
+import com.example.administrator.myapplication.Events.EventObject;
 
 /**
  * Created by Administrator on 2016/10/21.
  */
 
-public interface NPEventListener extends java.util.EventListener {
-    void processEvent(EventObject sender, EventArgs e);
+public interface NPEventListener<T extends  Entity> extends java.util.EventListener {
+    void processEvent(EventObject<T> sender, EventArgs e);
 }

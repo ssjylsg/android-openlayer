@@ -31,7 +31,9 @@ public abstract class Layer extends Entity {
     public void setMap(NetPosaMap map) {
         this.map = map;
     }
-
+    public NetPosaMap getMap(  ) {
+         return this.map;
+    }
     protected Object ExecuteJs(String method, Object... args) {
         if (this.map != null) {
             return this.map.ExecuteJs(this, method, args);

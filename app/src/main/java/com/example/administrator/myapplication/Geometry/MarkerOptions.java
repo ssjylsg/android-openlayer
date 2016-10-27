@@ -25,7 +25,6 @@ public class MarkerOptions {
         this.graphicWidth = graphicWidth;
         this.graphicXOffset = -graphicWidth / 2;
         this.graphicYOffset = -graphicHeight / 2;
-
     }
 
     public MarkerOptions() {
@@ -142,5 +141,9 @@ public class MarkerOptions {
 
     public void setFontFamily(String fontFamily) {
         this.fontFamily = fontFamily;
+    }
+
+    public String toString() {
+        return com.alibaba.fastjson.JSON.toJSONString(this);
     }
 }

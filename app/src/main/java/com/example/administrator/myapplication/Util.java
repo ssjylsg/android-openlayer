@@ -47,9 +47,12 @@ public class Util {
 
 
     public static void Info(String tag, String msg) {
-        if(msg != null){
+        if (!isEmpty(msg)) {
             android.util.Log.i(tag, msg);
         }
+    }
 
+    public static boolean isEmpty(String value) {
+        return value == null || value.length() == 0 || value.trim() == "";
     }
 }

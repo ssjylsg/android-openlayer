@@ -1,6 +1,12 @@
 package com.example.administrator.myapplication;
 
 
+
+import com.example.administrator.myapplication.Events.EventObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Administrator on 2016/10/17.
  */
@@ -41,4 +47,12 @@ public abstract class Entity  {
         return this.toJson();
     }
 
+    protected Map<String,NPEventListener> events = new HashMap<String,NPEventListener>();
+    public void addEventListener(String type, NPEventListener eventListener){
+
+    }
+
+    public void processEvent(String event,Object ... args){
+        this.events.get(event).processEvent(new EventObject(this),new EventArgs(args));
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.administrator.myapplication;
 
 import android.app.AlertDialog;
+import android.webkit.GeolocationPermissions;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
@@ -16,6 +17,7 @@ public class SimpleJavaJSWebChromeClient extends WebChromeClient {
     public SimpleJavaJSWebChromeClient(NetPosaMap map) {
         this.map = map;
     }
+
     @Override
     public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
@@ -31,6 +33,7 @@ public class SimpleJavaJSWebChromeClient extends WebChromeClient {
         return true;
         // return super.onJsAlert(view, url, message, result);
     }
+
     @Override
     public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, JsPromptResult result) {
         Util.Info("onJsPrompt", message);
@@ -42,4 +45,10 @@ public class SimpleJavaJSWebChromeClient extends WebChromeClient {
         return super.onJsPrompt(view, url, message, defaultValue, result);
     }
 
+    @Override
+    public void onGeolocationPermissionsShowPrompt(String origin,
+                                                   GeolocationPermissions.Callback callback) {
+        callback.invoke(origin, true, false);
+        super.onGeolocationPermissionsShowPrompt(origin, callback);
+    }
 }

@@ -5,6 +5,10 @@ package com.example.administrator.myapplication;
  */
 
 public class Size {
+    public Size(int height,int width){
+        this.height = height;
+        this.width = width;
+    }
     private int height;
     private int width;
 

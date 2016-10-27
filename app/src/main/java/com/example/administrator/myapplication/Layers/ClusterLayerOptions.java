@@ -17,6 +17,8 @@ public class ClusterLayerOptions {
     private String fontSize;
     private String customLabelFontColor;
     private Size customLabelOffset;
+    private Image ClusterImage;
+    private Image SingleImage;
 
 
     public int getSelectZoom() {
@@ -97,5 +99,21 @@ public class ClusterLayerOptions {
 
     public void setCustomLabelOffset(Size customLabelOffset) {
         this.customLabelOffset = customLabelOffset;
+    }
+
+    public Image getClusterImage() {
+        return ClusterImage;
+    }
+
+    public void setClusterImage(Image clusterImage) {
+        ClusterImage = clusterImage;
+    }
+
+    public Image getSingleImage() {
+        return SingleImage;
+    }
+
+    public void setSingleImage(Image singleImage) {
+        SingleImage = singleImage;
     }
 }
