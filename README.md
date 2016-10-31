@@ -4,3 +4,5 @@
 1. Marker 布点功能
 2. 聚合功能。
 3. 覆盖物，包括点、线、面
+
+备注：本文采用jsbridge 实现 js 与webview 交互，在使用过程中，对jsbridge 进行了修改。
